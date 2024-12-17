@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom Video Player</title>
   <style>
+    /* Basic Styles */
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 20px;
     }
+
     .player {
       max-width: 700px;
       margin: 0 auto;
@@ -20,10 +22,12 @@
       overflow: hidden;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
+
     .player__video {
       width: 100%;
       display: block;
     }
+
     .player__controls {
       display: flex;
       align-items: center;
@@ -31,6 +35,7 @@
       padding: 10px;
       background: #222;
     }
+
     .player__button {
       background: none;
       border: none;
@@ -39,9 +44,11 @@
       cursor: pointer;
       padding: 5px 10px;
     }
+
     .player__button:hover {
       color: #00c4ff;
     }
+
     .progress {
       flex: 1;
       margin: 0 10px;
@@ -50,11 +57,13 @@
       height: 5px;
       position: relative;
     }
+
     .progress__filled {
       background: #00c4ff;
       height: 100%;
       width: 50%; /* Progress bar at 50% */
     }
+
     .player__slider {
       width: 100px;
       margin: 0 10px;
@@ -63,11 +72,12 @@
 </head>
 <body>
 
+<!-- Video Player -->
 <div class="player">
-  <!-- Video Element -->
-  <video class="player__video" src="video-source.mp4" id="video" autoplay></video>
+  <!-- Video -->
+  <video class="player__video" id="video" src="video-source.mp4"></video>
 
-  <!-- Player Controls -->
+  <!-- Controls -->
   <div class="player__controls">
     <!-- Rewind 10s -->
     <button class="player__button" id="rewind" title="Rewind 10s">« 10s</button>
@@ -154,3 +164,4 @@
 
 </body>
 </html>
+

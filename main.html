@@ -3,93 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Player</title>
+  <title>Video Speed Controller</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Video Player -->
-<video id="video" width="700" src="video-source.mp4"></video>
+<div class="player">
+  <!-- Video -->
+  <video class="player__video viewer" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
 
-<!-- Controls -->
-<div>
-  <!-- Rewind 10s Button -->
-  <button id="rewind">« 10s</button>
-  
-  <!-- Toggle Play/Pause Button -->
-  <button id="playPause">❚ ❚</button>
-  
-  <!-- Forward 25s Button -->
-  <button id="forward">25s »</button>
-  
-  <!-- Progress Bar -->
-  <input type="range" id="progress" value="50" min="0" max="100" step="1" style="width: 300px;">
-  
-  <!-- Volume Input -->
-  <label for="volume">Volume:</label>
-  <input type="range" id="volume" min="0" max="1" step="0.05" value="0.75">
-  
-  <!-- Playback Speed -->
-  <label for="speed">Speed:</label>
-  <input type="number" id="speed" min="0.5" max="2" step="0.25" value="1">x
+  <!-- Controls -->
+  <div class="player__controls">
+    <!-- Rewind Button -->
+    <button class="player__button rewind" data-skip="-10">« 10s</button>
+    
+    <!-- Play/Pause Button -->
+    <button class="player__button toggle" title="Toggle Play">❚ ❚</button>
+    
+    <!-- Forward Button -->
+    <button class="player__button forward" data-skip="25">25s »</button>
+    
+    <!-- Progress Bar -->
+    <div class="progress">
+      <div class="progress__filled"></div>
+    </div>
+    
+    <!-- Volume Control -->
+    <label for="volume">Volume:</label>
+    <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="0.75">
+    
+    <!-- Playback Speed -->
+    <label for="playbackRate">Speed:</label>
+    <input type="number" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.25" value="1">x
+  </div>
 </div>
 
-<script>
-  const video = document.getElementById('video');
-  const playPauseBtn = document.getElementById('playPause');
-  const rewindBtn = document.getElementById('rewind');
-  const forwardBtn = document.getElementById('forward');
-  const progressBar = document.getElementById('progress');
-  const volumeInput = document.getElementById('volume');
-  const speedInput = document.getElementById('speed');
-
-  // Play/Pause Toggle
-  playPauseBtn.addEventListener('click', () => {
-    if (video.paused) {
-      video.play();
-      playPauseBtn.textContent = '❚ ❚';
-    } else {
-      video.pause();
-      playPauseBtn.textContent = '►';
-    }
-  });
-
-  // Rewind 10 seconds
-  rewindBtn.addEventListener('click', () => {
-    video.currentTime -= 10;
-  });
-
-  // Forward 25 seconds
-  forwardBtn.addEventListener('click', () => {
-    video.currentTime += 25;
-  });
-
-  // Update Progress Bar
-  video.addEventListener('timeupdate', () => {
-    const percent = (video.currentTime / video.duration) * 100;
-    progressBar.value = percent;
-  });
-
-  // Seek Video
-  progressBar.addEventListener('input', () => {
-    const time = (progressBar.value / 100) * video.duration;
-    video.currentTime = time;
-  });
-
-  // Update Volume
-  volumeInput.addEventListener('input', () => {
-    video.volume = volumeInput.value;
-  });
-
-  // Update Playback Speed
-  speedInput.addEventListener('input', () => {
-    video.playbackRate = speedInput.value;
-  });
-
-  // Set Initial Progress at 50%
-  video.addEventListener('loadedmetadata', () => {
-    video.currentTime = video.duration * 0.5;
-  });
-</script>
-
+<script src="scripts.js"></script>
 </body>
 </html>
+

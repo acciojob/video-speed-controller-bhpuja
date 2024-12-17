@@ -3,165 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom Video Player</title>
-  <style>
-    /* Basic Styles */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .player {
-      max-width: 700px;
-      margin: 0 auto;
-      background: #333;
-      border: 1px solid #222;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-
-    .player__video {
-      width: 100%;
-      display: block;
-    }
-
-    .player__controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      background: #222;
-    }
-
-    .player__button {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-      padding: 5px 10px;
-    }
-
-    .player__button:hover {
-      color: #00c4ff;
-    }
-
-    .progress {
-      flex: 1;
-      margin: 0 10px;
-      cursor: pointer;
-      background: #555;
-      height: 5px;
-      position: relative;
-    }
-
-    .progress__filled {
-      background: #00c4ff;
-      height: 100%;
-      width: 50%; /* Progress bar at 50% */
-    }
-
-    .player__slider {
-      width: 100px;
-      margin: 0 10px;
-    }
-  </style>
+  <title>Video Player</title>
 </head>
 <body>
 
 <!-- Video Player -->
-<div class="player">
-  <!-- Video -->
-  <video class="player__video" id="video" src="video-source.mp4"></video>
+<video id="video" width="700" src="video-source.mp4"></video>
 
-  <!-- Controls -->
-  <div class="player__controls">
-    <!-- Rewind 10s -->
-    <button class="player__button" id="rewind" title="Rewind 10s">« 10s</button>
-
-    <!-- Toggle Play/Pause -->
-    <button class="player__button" id="toggle" title="Toggle Play">❚ ❚</button>
-
-    <!-- Forward 25s -->
-    <button class="player__button" id="forward" title="Forward 25s">25s »</button>
-
-    <!-- Progress Bar -->
-    <div class="progress" id="progress">
-      <div class="progress__filled" id="progressFilled"></div>
-    </div>
-
-    <!-- Volume Slider -->
-    <input type="range" class="player__slider" id="volume" min="0" max="1" step="0.05" value="0.75" title="Volume">
-
-    <!-- Playback Speed -->
-    <input type="number" class="player__slider" id="playbackSpeed" min="0.5" max="2" step="0.25" value="1" title="Playback Speed">x
-  </div>
+<!-- Controls -->
+<div>
+  <!-- Rewind 10s Button -->
+  <button id="rewind">« 10s</button>
+  
+  <!-- Toggle Play/Pause Button -->
+  <button id="playPause">❚ ❚</button>
+  
+  <!-- Forward 25s Button -->
+  <button id="forward">25s »</button>
+  
+  <!-- Progress Bar -->
+  <input type="range" id="progress" value="50" min="0" max="100" step="1" style="width: 300px;">
+  
+  <!-- Volume Input -->
+  <label for="volume">Volume:</label>
+  <input type="range" id="volume" min="0" max="1" step="0.05" value="0.75">
+  
+  <!-- Playback Speed -->
+  <label for="speed">Speed:</label>
+  <input type="number" id="speed" min="0.5" max="2" step="0.25" value="1">x
 </div>
 
 <script>
   const video = document.getElementById('video');
-  const toggleButton = document.getElementById('toggle');
-  const rewindButton = document.getElementById('rewind');
-  const forwardButton = document.getElementById('forward');
-  const volumeSlider = document.getElementById('volume');
-  const playbackSpeedInput = document.getElementById('playbackSpeed');
+  const playPauseBtn = document.getElementById('playPause');
+  const rewindBtn = document.getElementById('rewind');
+  const forwardBtn = document.getElementById('forward');
   const progressBar = document.getElementById('progress');
-  const progressFilled = document.getElementById('progressFilled');
+  const volumeInput = document.getElementById('volume');
+  const speedInput = document.getElementById('speed');
 
-  // Toggle Play/Pause
-  function togglePlay() {
+  // Play/Pause Toggle
+  playPauseBtn.addEventListener('click', () => {
     if (video.paused) {
       video.play();
-      toggleButton.textContent = '❚ ❚';
+      playPauseBtn.textContent = '❚ ❚';
     } else {
       video.pause();
-      toggleButton.textContent = '►';
+      playPauseBtn.textContent = '►';
     }
-  }
+  });
+
+  // Rewind 10 seconds
+  rewindBtn.addEventListener('click', () => {
+    video.currentTime -= 10;
+  });
+
+  // Forward 25 seconds
+  forwardBtn.addEventListener('click', () => {
+    video.currentTime += 25;
+  });
 
   // Update Progress Bar
-  function updateProgress() {
+  video.addEventListener('timeupdate', () => {
     const percent = (video.currentTime / video.duration) * 100;
-    progressFilled.style.width = `${percent}%`;
-  }
+    progressBar.value = percent;
+  });
 
-  // Rewind and Forward Functions
-  function rewind() {
-    video.currentTime -= 10;
-  }
+  // Seek Video
+  progressBar.addEventListener('input', () => {
+    const time = (progressBar.value / 100) * video.duration;
+    video.currentTime = time;
+  });
 
-  function forward() {
-    video.currentTime += 25;
-  }
+  // Update Volume
+  volumeInput.addEventListener('input', () => {
+    video.volume = volumeInput.value;
+  });
 
-  // Update Volume and Playback Speed
-  function updateVolume() {
-    video.volume = volumeSlider.value;
-  }
+  // Update Playback Speed
+  speedInput.addEventListener('input', () => {
+    video.playbackRate = speedInput.value;
+  });
 
-  function updateSpeed() {
-    video.playbackRate = playbackSpeedInput.value;
-  }
-
-  // Seek Functionality
-  function scrub(event) {
-    const scrubTime = (event.offsetX / progressBar.offsetWidth) * video.duration;
-    video.currentTime = scrubTime;
-  }
-
-  // Event Listeners
-  toggleButton.addEventListener('click', togglePlay);
-  rewindButton.addEventListener('click', rewind);
-  forwardButton.addEventListener('click', forward);
-  video.addEventListener('timeupdate', updateProgress);
-  volumeSlider.addEventListener('input', updateVolume);
-  playbackSpeedInput.addEventListener('input', updateSpeed);
-  progressBar.addEventListener('click', scrub);
+  // Set Initial Progress at 50%
+  video.addEventListener('loadedmetadata', () => {
+    video.currentTime = video.duration * 0.5;
+  });
 </script>
 
 </body>
 </html>
-
